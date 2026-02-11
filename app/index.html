@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>Monitor - Login</title>
+ <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body class="login-page">
+ <div class="login-container">
+  <div class="login-header">
+   <h1>📊 MONITOR</h1>
+   <p>Personal Life Management System</p>
+  </div>
+
+  <div class="tab-container">
+   <button class="tab-btn active" data-tab="login">Login</button>
+   <button class="tab-btn" data-tab="register">Register</button>
+  </div>
+
+  <!-- Login Form -->
+  <div class="form-content active" id="login-form">
+   <form id="loginForm">
+    <div class="form-group">
+     <label for="login-username">Username or Email</label>
+     <input type="text" id="login-username" required placeholder="Enter your username or email">
+    </div>
+    <div class="form-group">
+     <label for="login-password">Password</label>
+     <input type="password" id="login-password" required placeholder="Enter your password">
+    </div>
+    <button type="submit" class="btn btn-primary">Login</button>
+    <div class="message" id="login-message"></div>
+   </form>
+  </div>
+
+  <!-- Register Form -->
+  <div class="form-content" id="register-form">
+   <form id="registerForm">
+    <div class="form-group">
+     <label for="reg-fullname">Full Name</label>
+     <input type="text" id="reg-fullname" required placeholder="Enter your full name">
+    </div>
+    <div class="form-group">
+     <label for="reg-username">Username</label>
+     <input type="text" id="reg-username" required placeholder="Choose a username">
+    </div>
+    <div class="form-group">
+     <label for="reg-email">Email</label>
+     <input type="email" id="reg-email" required placeholder="Enter your email">
+    </div>
+    <div class="form-group">
+     <label for="reg-password">Password</label>
+     <input type="password" id="reg-password" required placeholder="Choose a password">
+    </div>
+    <div class="form-group">
+     <label for="reg-confirm-password">Confirm Password</label>
+     <input type="password" id="reg-confirm-password" required placeholder="Confirm your password">
+    </div>
+    <button type="submit" class="btn btn-primary">Register</button>
+    <div class="message" id="register-message"></div>
+   </form>
+  </div>
+
+  <div class="login-footer">
+   <p>🔒 All data stored locally on your device</p>
+   <p>✨ 100% offline • No server required</p>
+  </div>
+ </div>
+
+ <script>
+  // Tab Switching
+  const tabButtons = document.querySelectorAll('.tab-btn');
+  const formContents = document.querySelectorAll('.form-content');
+
+  tabButtons.forEach(btn => {
+   btn.addEventListener('click', () => {
+    const tabName = btn.getAttribute('data-tab');
+
+    tabButtons.forEach(b => b.classList.remove('active'));
+    formContents.forEach(f => f.classList.remove('active'));
+
+    btn.classList.add('active');
+    document.getElementById(`${tabName}-form`).classList.add('active');
+   });
+  });
+
+  // Login Form Handler
+  document.getElementById('loginForm').addEventListener('submit', async (e) => {
+   e.preventDefault();
+
+   const username = document.getElementById('login-username').value;
+   const password = document.getElementById('login-password').value;
+   const messageDiv = document.getElementById('login-message');
+
+   messageDiv.textContent = 'Logging in...';
+   messageDiv.className = 'message info';
+
+   try {
+    const result = await window.electronAPI.loginUser({ username, password });
+
+    if (result.success) {
+     messageDiv.textContent = 'Login successful! Redirecting...';
+     messageDiv.className = 'message success';
+
+     // Store user data in sessionStorage
+     sessionStorage.setItem('currentUser', JSON.stringify(result.user));
+
+     // Redirect to dashboard
+     setTimeout(() => {
+      window.location.href = 'dashboard.html';
+     }, 500);
+    } else {
+     messageDiv.textContent = result.error || 'Login failed';
+     messageDiv.className = 'message error';
+    }
+   } catch (error) {
+    messageDiv.textContent = 'An error occurred. Please try again.';
+    messageDiv.className = 'message error';
+    console.error('Login error:', error);
+   }
+  });
+
+  // Register Form Handler
+  document.getElementById('registerForm').addEventListener('submit', async (e) => {
+   e.preventDefault();
+
+   const fullName = document.getElementById('reg-fullname').value;
+   const username = document.getElementById('reg-username').value;
+   const email = document.getElementById('reg-email').value;
+   const password = document.getElementById('reg-password').value;
+   const confirmPassword = document.getElementById('reg-confirm-password').value;
+   const messageDiv = document.getElementById('register-message');
+
+   // Validate passwords match
+   if (password !== confirmPassword) {
+    messageDiv.textContent = 'Passwords do not match!';
+    messageDiv.className = 'message error';
+    return;
+   }
+
+   // Validate password length
+   if (password.length < 6) {
+    messageDiv.textContent = 'Password must be at least 6 characters long!';
+    messageDiv.className = 'message error';
+    return;
+   }
+
+   messageDiv.textContent = 'Creating account...';
+   messageDiv.className = 'message info';
+
+   try {
+    const result = await window.electronAPI.registerUser({
+     username,
+     email,
+     password,
+     fullName
+    });
+
+    if (result.success) {
+     messageDiv.textContent = 'Registration successful! You can now login.';
+     messageDiv.className = 'message success';
+
+     // Clear form
+     document.getElementById('registerForm').reset();
+
+     // Switch to login tab after 2 seconds
+     setTimeout(() => {
+      document.querySelector('[data-tab="login"]').click();
+     }, 2000);
+    } else {
+     messageDiv.textContent = result.error || 'Registration failed';
+     messageDiv.className = 'message error';
+    }
+   } catch (error) {
+    messageDiv.textContent = 'An error occurred. Please try again.';
+    messageDiv.className = 'message error';
+    console.error('Registration error:', error);
+   }
+  });
+ </script>
+</body>
+
+</html>

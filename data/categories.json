@@ -1,0 +1,62 @@
+[
+  {
+    "categoryId": "cat-1",
+    "categoryName": "Food & Dining",
+    "type": "EXPENSE"
+  },
+  {
+    "categoryId": "cat-2",
+    "categoryName": "Transportation",
+    "type": "EXPENSE"
+  },
+  {
+    "categoryId": "cat-3",
+    "categoryName": "Shopping",
+    "type": "EXPENSE"
+  },
+  {
+    "categoryId": "cat-4",
+    "categoryName": "Entertainment",
+    "type": "EXPENSE"
+  },
+  {
+    "categoryId": "cat-5",
+    "categoryName": "Bills & Utilities",
+    "type": "EXPENSE"
+  },
+  {
+    "categoryId": "cat-6",
+    "categoryName": "Healthcare",
+    "type": "EXPENSE"
+  },
+  {
+    "categoryId": "cat-7",
+    "categoryName": "Education",
+    "type": "EXPENSE"
+  },
+  {
+    "categoryId": "cat-8",
+    "categoryName": "Personal",
+    "type": "EXPENSE"
+  },
+  {
+    "categoryId": "cat-9",
+    "categoryName": "Salary",
+    "type": "INCOME"
+  },
+  {
+    "categoryId": "cat-10",
+    "categoryName": "Freelance",
+    "type": "INCOME"
+  },
+  {
+    "categoryId": "cat-11",
+    "categoryName": "Investment",
+    "type": "INCOME"
+  },
+  {
+    "categoryId": "cat-12",
+    "categoryName": "Other Income",
+    "type": "INCOME"
+  }
+]

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>Monitor - Dashboard</title>
+ <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body class="dashboard-page">
+ <div class="dashboard-container">
+  <!-- Sidebar Navigation -->
+  <aside class="sidebar">
+   <div class="sidebar-header">
+    <h2>📊 MONITOR</h2>
+    <p id="user-name">Welcome</p>
+   </div>
+
+   <nav class="sidebar-nav">
+    <a href="#" class="nav-link active" data-view="overview">
+     <span class="icon">📊</span> Dashboard
+    </a>
+    <a href="#" class="nav-link" data-view="transactions">
+     <span class="icon">💰</span> Transactions
+    </a>
+    <a href="#" class="nav-link" data-view="tasks">
+     <span class="icon">✓</span> Tasks
+    </a>
+    <a href="#" class="nav-link" data-view="bills">
+     <span class="icon">📄</span> Bills
+    </a>
+    <a href="#" class="nav-link" data-view="goals">
+     <span class="icon">🎯</span> Goals
+    </a>
+    <a href="#" class="nav-link" data-view="notes">
+     <span class="icon">📝</span> Notes
+    </a>
+    <a href="#" class="nav-link" data-view="calendar">
+     <span class="icon">📅</span> Calendar
+    </a>
+   </nav>
+
+   <div class="sidebar-footer">
+    <a href="#" class="nav-link" data-view="settings">
+     <span class="icon">⚙️</span> Settings
+    </a>
+    <button id="logout-btn" class="btn-logout">
+     <span class="icon">🚪</span> Logout
+    </button>
+   </div>
+  </aside>
+
+  <!-- Main Content Area -->
+  <main class="main-content">
+   <header class="content-header">
+    <h1 id="view-title">Dashboard Overview</h1>
+    <div class="header-actions">
+     <span id="current-date"></span>
+    </div>
+   </header>
+
+   <div class="content-body">
+    <!-- Overview View -->
+    <div class="view active" id="view-overview">
+     <div class="stats-grid">
+      <div class="stat-card income">
+       <div class="stat-icon">💵</div>
+       <div class="stat-info">
+        <h3>Monthly Income</h3>
+        <p class="stat-value" id="stat-income">$0.00</p>
+       </div>
+      </div>
+      <div class="stat-card expense">
+       <div class="stat-icon">💸</div>
+       <div class="stat-info">
+        <h3>Monthly Expenses</h3>
+        <p class="stat-value" id="stat-expense">$0.00</p>
+       </div>
+      </div>
+      <div class="stat-card savings">
+       <div class="stat-icon">💰</div>
+       <div class="stat-info">
+        <h3>Net Savings</h3>
+        <p class="stat-value" id="stat-savings">$0.00</p>
+       </div>
+      </div>
+      <div class="stat-card tasks">
+       <div class="stat-icon">✓</div>
+       <div class="stat-info">
+        <h3>Pending Tasks</h3>
+        <p class="stat-value" id="stat-tasks">0</p>
+       </div>
+      </div>
+     </div>
+
+     <div class="dashboard-grid">
+      <div class="dashboard-card">
+       <h3>Recent Transactions</h3>
+       <div id="recent-transactions"></div>
+      </div>
+      <div class="dashboard-card">
+       <h3>Upcoming Bills</h3>
+       <div id="upcoming-bills"></div>
+      </div>
+      <div class="dashboard-card">
+       <h3>Today's Tasks</h3>
+       <div id="todays-tasks"></div>
+      </div>
+      <div class="dashboard-card">
+       <h3>Active Goals</h3>
+       <div id="active-goals"></div>
+      </div>
+     </div>
+    </div>
+
+    <!-- Transactions View -->
+    <div class="view" id="view-transactions">
+     <div class="view-actions">
+      <button class="btn btn-primary" id="add-transaction-btn">+ Add Transaction</button>
+      <select id="transaction-filter">
+       <option value="all">All Transactions</option>
+       <option value="INCOME">Income Only</option>
+       <option value="EXPENSE">Expenses Only</option>
+      </select>
+     </div>
+     <div id="transactions-list"></div>
+    </div>
+
+    <!-- Tasks View -->
+    <div class="view" id="view-tasks">
+     <div class="view-actions">
+      <button class="btn btn-primary" id="add-task-btn">+ Add Task</button>
+      <select id="task-filter">
+       <option value="all">All Tasks</option>
+       <option value="pending">Pending</option>
+       <option value="completed">Completed</option>
+      </select>
+     </div>
+     <div id="tasks-list"></div>
+    </div>
+
+    <!-- Bills View -->
+    <div class="view" id="view-bills">
+     <div class="view-actions">
+      <button class="btn btn-primary" id="add-bill-btn">+ Add Bill</button>
+      <select id="bill-filter">
+       <option value="all">All Bills</option>
+       <option value="unpaid">Unpaid</option>
+       <option value="paid">Paid</option>
+      </select>
+     </div>
+     <div id="bills-list"></div>
+    </div>
+
+    <!-- Goals View -->
+    <div class="view" id="view-goals">
+     <div class="view-actions">
+      <button class="btn btn-primary" id="add-goal-btn">+ Add Goal</button>
+     </div>
+     <div id="goals-list"></div>
+    </div>
+
+    <!-- Notes View -->
+    <div class="view" id="view-notes">
+     <div class="view-actions">
+      <button class="btn btn-primary" id="add-note-btn">+ Add Note</button>
+      <input type="text" id="note-search" placeholder="Search notes...">
+     </div>
+     <div id="notes-list"></div>
+    </div>
+
+    <!-- Calendar View -->
+    <div class="view" id="view-calendar">
+     <div class="view-actions">
+      <button class="btn btn-primary" id="add-event-btn">+ Add Event</button>
+     </div>
+     <div id="calendar-view"></div>
+     <div id="events-list"></div>
+    </div>
+
+    <!-- Settings View -->
+    <div class="view" id="view-settings">
+     <div class="settings-card">
+      <h3>Profile Settings</h3>
+      <form id="profile-form">
+       <div class="form-group">
+        <label>Full Name</label>
+        <input type="text" id="settings-fullname">
+       </div>
+       <div class="form-group">
+        <label>Email</label>
+        <input type="email" id="settings-email">
+       </div>
+       <button type="submit" class="btn btn-primary">Update Profile</button>
+      </form>
+     </div>
+
+     <div class="settings-card">
+      <h3>Change Password</h3>
+      <form id="password-form">
+       <div class="form-group">
+        <label>Current Password</label>
+        <input type="password" id="current-password" required>
+       </div>
+       <div class="form-group">
+        <label>New Password</label>
+        <input type="password" id="new-password" required>
+       </div>
+       <div class="form-group">
+        <label>Confirm New Password</label>
+        <input type="password" id="confirm-password" required>
+       </div>
+       <button type="submit" class="btn btn-primary">Change Password</button>
+      </form>
+     </div>
+    </div>
+   </div>
+  </main>
+ </div>
+
+ <!-- Modals will be inserted here by JavaScript -->
+ <div id="modal-container"></div>
+
+ <script src="js/renderer.js"></script>
+</body>
+
+</html>
