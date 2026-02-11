@@ -6,6 +6,11 @@
  <meta name="viewport" content="width=device-width, initial-scale=1.0">
  <title>Monitor - Dashboard</title>
  <link rel="stylesheet" href="css/style.css">
+ <link rel="stylesheet" href="css/dashboard-widgets.css">
+ <!-- Chart.js for visualization -->
+ <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+ <!-- SortableJS for drag and drop -->
+ <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
 </head>
 
 <body class="dashboard-page">
@@ -54,67 +59,209 @@
   <!-- Main Content Area -->
   <main class="main-content">
    <header class="content-header">
-    <h1 id="view-title">Dashboard Overview</h1>
+    <div class="header-left">
+     <h1 id="view-title">Dashboard Overview</h1>
+     <p class="header-subtitle">Welcome back! Here's your personalized overview</p>
+    </div>
     <div class="header-actions">
      <span id="current-date"></span>
+     <button class="btn-customize" id="customizeToggleBtn">
+      <span class="icon">⚙️</span>
+      <span id="customizeBtnText">Customize</span>
+     </button>
     </div>
    </header>
 
    <div class="content-body">
     <!-- Overview View -->
     <div class="view active" id="view-overview">
-     <div class="stats-grid">
-      <div class="stat-card income">
+     <!-- Quick Stats Bar -->
+     <div class="quick-stats">
+      <div class="stat-item stat-income">
        <div class="stat-icon">💵</div>
-       <div class="stat-info">
-        <h3>Monthly Income</h3>
-        <p class="stat-value" id="stat-income">$0.00</p>
+       <div class="stat-content">
+        <span class="stat-label">Monthly Income</span>
+        <span class="stat-value" id="stat-income">$0.00</span>
        </div>
       </div>
-      <div class="stat-card expense">
+
+      <div class="stat-item stat-expense">
        <div class="stat-icon">💸</div>
-       <div class="stat-info">
-        <h3>Monthly Expenses</h3>
-        <p class="stat-value" id="stat-expense">$0.00</p>
+       <div class="stat-content">
+        <span class="stat-label">Monthly Expenses</span>
+        <span class="stat-value" id="stat-expense">$0.00</span>
        </div>
       </div>
-      <div class="stat-card savings">
+
+      <div class="stat-item stat-savings">
        <div class="stat-icon">💰</div>
-       <div class="stat-info">
-        <h3>Net Savings</h3>
-        <p class="stat-value" id="stat-savings">$0.00</p>
+       <div class="stat-content">
+        <span class="stat-label">Net Savings</span>
+        <span class="stat-value" id="stat-savings">$0.00</span>
        </div>
       </div>
-      <div class="stat-card tasks">
+
+      <div class="stat-item stat-tasks">
        <div class="stat-icon">✓</div>
-       <div class="stat-info">
-        <h3>Pending Tasks</h3>
-        <p class="stat-value" id="stat-tasks">0</p>
+       <div class="stat-content">
+        <span class="stat-label">Pending Tasks</span>
+        <span class="stat-value" id="stat-tasks">0</span>
        </div>
       </div>
      </div>
 
-     <div class="dashboard-grid">
-      <div class="dashboard-card">
-       <h3>Recent Transactions</h3>
-       <div id="recent-transactions"></div>
+     <!-- Widget Grid (Customizable & Draggable) -->
+     <div class="widgets-grid" id="widgetsGrid">
+
+      <!-- Financial Summary Widget -->
+      <div class="widget" data-widget-id="financial-summary" data-widget-type="data">
+       <div class="widget-drag-handle">⋮⋮</div>
+       <div class="widget-header">
+        <div class="widget-title">
+         <span class="widget-icon">💰</span>
+         <h3>Financial Summary</h3>
+        </div>
+        <div class="widget-controls">
+         <span class="widget-period">This Month</span>
+        </div>
+       </div>
+       <div class="widget-body">
+        <div class="stat-row">
+         <span class="stat-label">Income:</span>
+         <span class="stat-value stat-positive" id="widget-income">$0.00</span>
+        </div>
+        <div class="stat-row">
+         <span class="stat-label">Expenses:</span>
+         <span class="stat-value stat-negative" id="widget-expense">$0.00</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-row stat-highlight">
+         <span class="stat-label">Net Savings:</span>
+         <span class="stat-value" id="widget-savings">$0.00</span>
+        </div>
+       </div>
       </div>
-      <div class="dashboard-card">
-       <h3>Upcoming Bills</h3>
-       <div id="upcoming-bills"></div>
+
+      <!-- Today's Tasks Widget -->
+      <div class="widget" data-widget-id="today-tasks" data-widget-type="list">
+       <div class="widget-drag-handle">⋮⋮</div>
+       <div class="widget-header">
+        <div class="widget-title">
+         <span class="widget-icon">✓</span>
+         <h3>Today's Tasks</h3>
+        </div>
+        <div class="widget-controls">
+         <span class="widget-badge" id="tasks-count">0</span>
+        </div>
+       </div>
+       <div class="widget-body">
+        <div id="widget-tasks-content"></div>
+       </div>
       </div>
-      <div class="dashboard-card">
-       <h3>Today's Tasks</h3>
-       <div id="todays-tasks"></div>
+
+      <!-- Upcoming Bills Widget -->
+      <div class="widget" data-widget-id="upcoming-bills" data-widget-type="list">
+       <div class="widget-drag-handle">⋮⋮</div>
+       <div class="widget-header">
+        <div class="widget-title">
+         <span class="widget-icon">🧾</span>
+         <h3>Upcoming Bills</h3>
+        </div>
+        <div class="widget-controls">
+         <span class="widget-badge" id="bills-count">0</span>
+        </div>
+       </div>
+       <div class="widget-body">
+        <div id="widget-bills-content"></div>
+       </div>
       </div>
-      <div class="dashboard-card">
-       <h3>Active Goals</h3>
-       <div id="active-goals"></div>
+
+      <!-- Expense Chart Widget -->
+      <div class="widget widget-large" data-widget-id="expense-chart" data-widget-type="chart">
+       <div class="widget-drag-handle">⋮⋮</div>
+       <div class="widget-header">
+        <div class="widget-title">
+         <span class="widget-icon">📊</span>
+         <h3>Expense Breakdown</h3>
+        </div>
+        <div class="widget-controls">
+         <span class="widget-period">This Month</span>
+        </div>
+       </div>
+       <div class="widget-body">
+        <canvas id="expenseChart"></canvas>
+       </div>
       </div>
+
+      <!-- Active Goals Widget -->
+      <div class="widget" data-widget-id="active-goals" data-widget-type="progress">
+       <div class="widget-drag-handle">⋮⋮</div>
+       <div class="widget-header">
+        <div class="widget-title">
+         <span class="widget-icon">🎯</span>
+         <h3>Active Goals</h3>
+        </div>
+        <div class="widget-controls">
+         <span class="widget-badge" id="goals-count">0</span>
+        </div>
+       </div>
+       <div class="widget-body">
+        <div id="widget-goals-content"></div>
+       </div>
+      </div>
+
+      <!-- Trend Chart Widget -->
+      <div class="widget widget-large" data-widget-id="trend-chart" data-widget-type="chart">
+       <div class="widget-drag-handle">⋮⋮</div>
+       <div class="widget-header">
+        <div class="widget-title">
+         <span class="widget-icon">📈</span>
+         <h3>Income vs Expenses Trend</h3>
+        </div>
+        <div class="widget-controls">
+         <span class="widget-period">Last 6 Months</span>
+        </div>
+       </div>
+       <div class="widget-body">
+        <canvas id="trendChart"></canvas>
+       </div>
+      </div>
+
+      <!-- Upcoming Events Widget -->
+      <div class="widget" data-widget-id="upcoming-events" data-widget-type="list">
+       <div class="widget-drag-handle">⋮⋮</div>
+       <div class="widget-header">
+        <div class="widget-title">
+         <span class="widget-icon">📅</span>
+         <h3>Upcoming Events</h3>
+        </div>
+        <div class="widget-controls">
+         <span class="widget-badge" id="events-count">0</span>
+        </div>
+       </div>
+       <div class="widget-body">
+        <div id="widget-events-content"></div>
+       </div>
+      </div>
+
+      <!-- Recent Notes Widget -->
+      <div class="widget" data-widget-id="recent-notes" data-widget-type="list">
+       <div class="widget-drag-handle">⋮⋮</div>
+       <div class="widget-header">
+        <div class="widget-title">
+         <span class="widget-icon">📝</span>
+         <h3>Recent Notes</h3>
+        </div>
+       </div>
+       <div class="widget-body">
+        <div id="widget-notes-content"></div>
+       </div>
+      </div>
+
      </div>
     </div>
 
-    <!-- Transactions View -->
+    <!-- Other Views (Transactions, Tasks, etc.) - Keep existing code -->
     <div class="view" id="view-transactions">
      <div class="view-actions">
       <button class="btn btn-primary" id="add-transaction-btn">+ Add Transaction</button>
@@ -127,7 +274,6 @@
      <div id="transactions-list"></div>
     </div>
 
-    <!-- Tasks View -->
     <div class="view" id="view-tasks">
      <div class="view-actions">
       <button class="btn btn-primary" id="add-task-btn">+ Add Task</button>
@@ -140,7 +286,6 @@
      <div id="tasks-list"></div>
     </div>
 
-    <!-- Bills View -->
     <div class="view" id="view-bills">
      <div class="view-actions">
       <button class="btn btn-primary" id="add-bill-btn">+ Add Bill</button>
@@ -153,7 +298,6 @@
      <div id="bills-list"></div>
     </div>
 
-    <!-- Goals View -->
     <div class="view" id="view-goals">
      <div class="view-actions">
       <button class="btn btn-primary" id="add-goal-btn">+ Add Goal</button>
@@ -161,7 +305,6 @@
      <div id="goals-list"></div>
     </div>
 
-    <!-- Notes View -->
     <div class="view" id="view-notes">
      <div class="view-actions">
       <button class="btn btn-primary" id="add-note-btn">+ Add Note</button>
@@ -170,7 +313,6 @@
      <div id="notes-list"></div>
     </div>
 
-    <!-- Calendar View -->
     <div class="view" id="view-calendar">
      <div class="view-actions">
       <button class="btn btn-primary" id="add-event-btn">+ Add Event</button>
@@ -179,7 +321,6 @@
      <div id="events-list"></div>
     </div>
 
-    <!-- Settings View -->
     <div class="view" id="view-settings">
      <div class="settings-card">
       <h3>Profile Settings</h3>
@@ -219,10 +360,84 @@
   </main>
  </div>
 
+ <!-- Widget Selection Panel (shown in customization mode) -->
+ <div class="customization-panel" id="customizationPanel">
+  <div class="panel-header">
+   <h3>Customize Your Dashboard</h3>
+   <p>Select widgets to display and drag them to rearrange</p>
+  </div>
+  <div class="widget-toggles">
+   <label class="widget-toggle">
+    <input type="checkbox" name="widget" value="financial-summary" checked>
+    <span class="toggle-label">
+     <span class="toggle-icon">💰</span>
+     <span>Financial Summary</span>
+    </span>
+   </label>
+
+   <label class="widget-toggle">
+    <input type="checkbox" name="widget" value="today-tasks" checked>
+    <span class="toggle-label">
+     <span class="toggle-icon">✓</span>
+     <span>Today's Tasks</span>
+    </span>
+   </label>
+
+   <label class="widget-toggle">
+    <input type="checkbox" name="widget" value="upcoming-bills" checked>
+    <span class="toggle-label">
+     <span class="toggle-icon">🧾</span>
+     <span>Upcoming Bills</span>
+    </span>
+   </label>
+
+   <label class="widget-toggle">
+    <input type="checkbox" name="widget" value="expense-chart" checked>
+    <span class="toggle-label">
+     <span class="toggle-icon">📊</span>
+     <span>Expense Breakdown</span>
+    </span>
+   </label>
+
+   <label class="widget-toggle">
+    <input type="checkbox" name="widget" value="active-goals" checked>
+    <span class="toggle-label">
+     <span class="toggle-icon">🎯</span>
+     <span>Active Goals</span>
+    </span>
+   </label>
+
+   <label class="widget-toggle">
+    <input type="checkbox" name="widget" value="trend-chart" checked>
+    <span class="toggle-label">
+     <span class="toggle-icon">📈</span>
+     <span>Income vs Expenses Trend</span>
+    </span>
+   </label>
+
+   <label class="widget-toggle">
+    <input type="checkbox" name="widget" value="upcoming-events" checked>
+    <span class="toggle-label">
+     <span class="toggle-icon">📅</span>
+     <span>Upcoming Events</span>
+    </span>
+   </label>
+
+   <label class="widget-toggle">
+    <input type="checkbox" name="widget" value="recent-notes" checked>
+    <span class="toggle-label">
+     <span class="toggle-icon">📝</span>
+     <span>Recent Notes</span>
+    </span>
+   </label>
+  </div>
+ </div>
+
  <!-- Modals will be inserted here by JavaScript -->
  <div id="modal-container"></div>
 
  <script src="js/renderer.js"></script>
+ <script src="js/dashboard-widgets.js"></script>
 </body>
 
 </html>
