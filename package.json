@@ -1,147 +1,147 @@
 {
- "name": "monitor-desktop",
- "version": "1.0.0",
- "description": "Monitor - Personal Life Management Desktop App",
- "main": "main.js",
- "homepage": "https://github.com/yourusername/monitor-desktop",
- "author": {
-  "name": "Your Name",
-  "email": "your.email@example.com"
- },
- "license": "MIT",
- "scripts": {
-  "start": "electron .",
-  "build": "electron-builder",
-  "build:win": "electron-builder --win --x64",
-  "build:mac": "electron-builder --mac",
-  "build:linux": "electron-builder --linux",
-  "build:all": "electron-builder -mwl",
-  "clean": "rimraf dist",
-  "prebuild": "npm run clean"
- },
- "keywords": [
-  "productivity",
-  "finance",
-  "tasks",
-  "personal-management",
-  "desktop-app"
- ],
- "devDependencies": {
-  "electron": "^28.0.0",
-  "electron-builder": "^24.9.1",
-  "rimraf": "^6.1.2"
- },
- "dependencies": {
-  "bcryptjs": "^2.4.3"
- },
- "build": {
-  "appId": "com.monitor.desktop",
-  "productName": "Monitor",
-  "copyright": "Copyright Â© 2026 ${author}",
-  "directories": {
-   "output": "dist",
-   "buildResources": "build"
-  },
-  "files": [
-   "**/*",
-   "!**/*.md",
-   "!data/**/*",
-   "!dist/**/*",
-   "!.git/**/*"
-  ],
-  "extraResources": [
-   {
-    "from": "data",
-    "to": "data",
-    "filter": [
-     "**/*"
-    ]
-   }
-  ],
-  "win": {
-   "target": [
-    {
-     "target": "nsis",
-     "arch": [
-      "x64"
-     ]
+    "name": "monitor-desktop",
+    "version": "1.1.0",
+    "description": "Monitor - Personal Life Management Desktop App",
+    "main": "main.js",
+    "homepage": "https://github.com/yourusername/monitor-desktop",
+    "author": {
+        "name": "Your Name",
+        "email": "your.email@example.com"
     },
-    {
-     "target": "portable",
-     "arch": [
-      "x64"
-     ]
-    }
-   ],
-   "artifactName": "${productName}-Setup-${version}.${ext}",
-   "publisherName": "Your Name",
-   "sign": null
-  },
-  "nsis": {
-   "oneClick": false,
-   "allowToChangeInstallationDirectory": true,
-   "allowElevation": true,
-   "createDesktopShortcut": true,
-   "createStartMenuShortcut": true,
-   "shortcutName": "Monitor"
-  },
-  "portable": {
-   "artifactName": "${productName}-Portable-${version}.${ext}"
-  },
-  "mac": {
-   "target": [
-    {
-     "target": "dmg",
-     "arch": [
-      "x64",
-      "arm64"
-     ]
-    }
-   ],
-   "category": "public.app-category.productivity",
-   "hardenedRuntime": true,
-   "gatekeeperAssess": false,
-   "artifactName": "${productName}-${version}.${ext}"
-  },
-  "dmg": {
-   "contents": [
-    {
-     "x": 130,
-     "y": 220
+    "license": "MIT",
+    "scripts": {
+        "start": "electron .",
+        "build": "electron-builder",
+        "build:win": "electron-builder --win --x64",
+        "build:mac": "electron-builder --mac",
+        "build:linux": "electron-builder --linux",
+        "build:all": "electron-builder -mwl",
+        "clean": "rimraf dist",
+        "prebuild": "npm run clean"
     },
-    {
-     "x": 410,
-     "y": 220,
-     "type": "link",
-     "path": "/Applications"
-    }
-   ]
-  },
-  "linux": {
-   "target": [
-    {
-     "target": "AppImage",
-     "arch": [
-      "x64"
-     ]
+    "keywords": [
+        "productivity",
+        "finance",
+        "tasks",
+        "personal-management",
+        "desktop-app"
+    ],
+    "devDependencies": {
+        "electron": "^28.0.0",
+        "electron-builder": "^24.9.1",
+        "rimraf": "^6.1.2"
     },
-    {
-     "target": "deb",
-     "arch": [
-      "x64"
-     ]
+    "dependencies": {
+        "bcryptjs": "^2.4.3"
     },
-    {
-     "target": "rpm",
-     "arch": [
-      "x64"
-     ]
+    "build": {
+        "appId": "com.monitor.desktop",
+        "productName": "monitor-desktop",
+        "copyright": "Copyright Â© 2026 ${author}",
+        "directories": {
+            "output": "dist",
+            "buildResources": "build"
+        },
+        "files": [
+            "**/*",
+            "!**/*.md",
+            "!data/**/*",
+            "!dist/**/*",
+            "!.git/**/*"
+        ],
+        "extraResources": [
+            {
+                "from": "data",
+                "to": "data",
+                "filter": [
+                    "**/*"
+                ]
+            }
+        ],
+        "win": {
+            "target": [
+                {
+                    "target": "nsis",
+                    "arch": [
+                        "x64"
+                    ]
+                },
+                {
+                    "target": "portable",
+                    "arch": [
+                        "x64"
+                    ]
+                }
+            ],
+            "artifactName": "${productName}-Setup-${version}.${ext}",
+            "publisherName": "Your Name",
+            "sign": null
+        },
+        "nsis": {
+            "oneClick": false,
+            "allowToChangeInstallationDirectory": true,
+            "allowElevation": true,
+            "createDesktopShortcut": true,
+            "createStartMenuShortcut": true,
+            "shortcutName": "Monitor"
+        },
+        "portable": {
+            "artifactName": "${productName}-Portable-${version}.${ext}"
+        },
+        "mac": {
+            "target": [
+                {
+                    "target": "dmg",
+                    "arch": [
+                        "x64",
+                        "arm64"
+                    ]
+                }
+            ],
+            "category": "public.app-category.productivity",
+            "hardenedRuntime": true,
+            "gatekeeperAssess": false,
+            "artifactName": "${productName}-${version}.${ext}"
+        },
+        "dmg": {
+            "contents": [
+                {
+                    "x": 130,
+                    "y": 220
+                },
+                {
+                    "x": 410,
+                    "y": 220,
+                    "type": "link",
+                    "path": "/Applications"
+                }
+            ]
+        },
+        "linux": {
+            "target": [
+                {
+                    "target": "AppImage",
+                    "arch": [
+                        "x64"
+                    ]
+                },
+                {
+                    "target": "deb",
+                    "arch": [
+                        "x64"
+                    ]
+                },
+                {
+                    "target": "rpm",
+                    "arch": [
+                        "x64"
+                    ]
+                }
+            ],
+            "category": "Office",
+            "description": "Personal Life Management Desktop Application",
+            "synopsis": "Manage your finances, tasks, bills, goals, and notes",
+            "artifactName": "${productName}-${version}.${ext}"
+        }
     }
-   ],
-   "category": "Office",
-   "description": "Personal Life Management Desktop Application",
-   "synopsis": "Manage your finances, tasks, bills, goals, and notes",
-   "artifactName": "${productName}-${version}.${ext}"
-  }
- }
 }
