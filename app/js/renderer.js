@@ -584,6 +584,71 @@ function renderCalendar() {
 }
 
 // ========================================
+// Custom Dialog System (Replaces native alert/confirm to fix focus issues)
+// ========================================
+function showAlert(message) {
+    return new Promise((resolve) => {
+        const modal = `
+            <div class="modal-overlay" style="z-index: 2000;">
+                <div class="modal" style="max-width: 400px; text-align: center;">
+                    <div class="modal-header">
+                        <h2>Notification</h2>
+                    </div>
+                    <div class="modal-body" style="padding: 1.5rem 0;">
+                        <p>${message}</p>
+                    </div>
+                    <div class="modal-footer" style="display: flex; justify-content: center; margin-top: 1rem;">
+                        <button class="btn btn-primary" id="alert-ok-btn" style="width: auto; min-width: 100px;">OK</button>
+                    </div>
+                </div>
+            </div>
+        `;
+        const container = document.getElementById('modal-container');
+        const originalContent = container.innerHTML;
+        container.innerHTML = modal;
+
+        document.getElementById('alert-ok-btn').addEventListener('click', () => {
+            container.innerHTML = originalContent || '';
+            resolve();
+        });
+    });
+}
+
+function showConfirm(message) {
+    return new Promise((resolve) => {
+        const modal = `
+            <div class="modal-overlay" style="z-index: 2000;">
+                <div class="modal" style="max-width: 400px; text-align: center;">
+                    <div class="modal-header">
+                        <h2>Confirmation</h2>
+                    </div>
+                    <div class="modal-body" style="padding: 1.5rem 0;">
+                        <p>${message}</p>
+                    </div>
+                    <div class="modal-footer" style="display: flex; justify-content: center; gap: 1rem; margin-top: 1rem;">
+                        <button class="btn btn-primary" id="confirm-yes-btn" style="width: auto; min-width: 100px;">Yes</button>
+                        <button class="btn" id="confirm-no-btn" style="width: auto; min-width: 100px; background: var(--bg-hover); color: var(--text-primary);">No</button>
+                    </div>
+                </div>
+            </div>
+        `;
+        const container = document.getElementById('modal-container');
+        const originalContent = container.innerHTML;
+        container.innerHTML = modal;
+
+        document.getElementById('confirm-yes-btn').addEventListener('click', () => {
+            container.innerHTML = originalContent || '';
+            resolve(true);
+        });
+
+        document.getElementById('confirm-no-btn').addEventListener('click', () => {
+            container.innerHTML = originalContent || '';
+            resolve(false);
+        });
+    });
+}
+
+// ========================================
 // Settings
 // ========================================
 function loadSettings() {
@@ -604,9 +669,9 @@ async function handleProfileUpdate(e) {
         currentUser.email = email;
         sessionStorage.setItem('currentUser', JSON.stringify(currentUser));
         document.getElementById('user-name').textContent = `Welcome, ${fullName || currentUser.username}`;
-        alert('Profile updated successfully!');
+        await showAlert('Profile updated successfully!');
     } else {
-        alert('Failed to update profile: ' + result.error);
+        await showAlert('Failed to update profile: ' + result.error);
     }
 }
 
@@ -618,17 +683,17 @@ async function handlePasswordChange(e) {
     const confirmPassword = document.getElementById('confirm-password').value;
 
     if (newPassword !== confirmPassword) {
-        alert('New passwords do not match!');
+        await showAlert('New passwords do not match!');
         return;
     }
 
     const result = await window.electronAPI.changePassword(currentUser.userId, oldPassword, newPassword);
 
     if (result.success) {
-        alert('Password changed successfully!');
+        await showAlert('Password changed successfully!');
         document.getElementById('password-form').reset();
     } else {
-        alert('Failed to change password: ' + result.error);
+        await showAlert('Failed to change password: ' + result.error);
     }
 }
 
@@ -712,7 +777,7 @@ function openTransactionModal(transactionId = null) {
             renderTransactions();
             renderOverview();
         } else {
-            alert('Error: ' + result.error);
+            await showAlert('Error: ' + result.error);
         }
     });
 }
@@ -780,7 +845,7 @@ function openTaskModal(taskId = null) {
             renderTasks();
             renderOverview();
         } else {
-            alert('Error: ' + result.error);
+            await showAlert('Error: ' + result.error);
         }
     });
 }
@@ -846,7 +911,7 @@ function openBillModal(billId = null) {
             renderBills();
             renderOverview();
         } else {
-            alert('Error: ' + result.error);
+            await showAlert('Error: ' + result.error);
         }
     });
 }
@@ -915,7 +980,7 @@ function openGoalModal(goalId = null) {
             renderGoals();
             renderOverview();
         } else {
-            alert('Error: ' + result.error);
+            await showAlert('Error: ' + result.error);
         }
     });
 }
@@ -968,7 +1033,7 @@ function openNoteModal(noteId = null) {
             await loadNotes();
             renderNotes();
         } else {
-            alert('Error: ' + result.error);
+            await showAlert('Error: ' + result.error);
         }
     });
 }
@@ -1018,7 +1083,7 @@ function openEventModal() {
             await loadEvents();
             renderCalendar();
         } else {
-            alert('Error: ' + result.error);
+            await showAlert('Error: ' + result.error);
         }
     });
 }
@@ -1036,7 +1101,7 @@ async function editTransaction(id) {
 }
 
 async function deleteTransaction(id) {
-    if (!confirm('Are you sure you want to delete this transaction?')) return;
+    if (!await showConfirm('Are you sure you want to delete this transaction?')) return;
 
     const result = await window.electronAPI.deleteTransaction(id);
     if (result.success) {
@@ -1051,7 +1116,7 @@ async function editTask(id) {
 }
 
 async function deleteTask(id) {
-    if (!confirm('Are you sure you want to delete this task?')) return;
+    if (!await showConfirm('Are you sure you want to delete this task?')) return;
 
     const result = await window.electronAPI.deleteTask(id);
     if (result.success) {
@@ -1075,7 +1140,7 @@ async function editBill(id) {
 }
 
 async function deleteBill(id) {
-    if (!confirm('Are you sure you want to delete this bill?')) return;
+    if (!await showConfirm('Are you sure you want to delete this bill?')) return;
 
     const result = await window.electronAPI.deleteBill(id);
     if (result.success) {
@@ -1099,7 +1164,7 @@ async function editGoal(id) {
 }
 
 async function deleteGoal(id) {
-    if (!confirm('Are you sure you want to delete this goal?')) return;
+    if (!await showConfirm('Are you sure you want to delete this goal?')) return;
 
     const result = await window.electronAPI.deleteGoal(id);
     if (result.success) {
@@ -1123,7 +1188,7 @@ async function editNote(id) {
 }
 
 async function deleteNote(id) {
-    if (!confirm('Are you sure you want to delete this note?')) return;
+    if (!await showConfirm('Are you sure you want to delete this note?')) return;
 
     const result = await window.electronAPI.deleteNote(id);
     if (result.success) {
@@ -1133,7 +1198,7 @@ async function deleteNote(id) {
 }
 
 async function deleteEvent(id) {
-    if (!confirm('Are you sure you want to delete this event?')) return;
+    if (!await showConfirm('Are you sure you want to delete this event?')) return;
 
     const result = await window.electronAPI.deleteEvent(id);
     if (result.success) {
@@ -1166,8 +1231,8 @@ function updateCurrentDate() {
     document.getElementById('current-date').textContent = dateStr;
 }
 
-function logout() {
-    if (confirm('Are you sure you want to logout?')) {
+async function logout() {
+    if (await showConfirm('Are you sure you want to logout?')) {
         sessionStorage.removeItem('currentUser');
         window.location.href = 'index.html';
     }
