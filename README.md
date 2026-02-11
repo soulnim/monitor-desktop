@@ -6,3 +6,6 @@
 # Installation
 - go to dist/
 - run monitor-installer
+
+# Installer
+Link: https://drive.google.com/drive/folders/10mXgYEpdUq-2NgYhnCoKKFDOEKcnuXIW?usp=drive_link
